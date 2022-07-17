@@ -1,19 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-const { notes } = require('./develop/db/db.json')
+const { notes } = require('./db/db.json')
 const PORT = process.env.PORT || 3000
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('./develop/public'));
+app.use(express.static('./public'));
 
 function newNote (body, notesArray) {
     const note = body;
     notesArray.push(note);
     fs.writeFileSync(
-        path.join(__dirname, './develop/db/db.json'),
+        path.join(__dirname, './db/db.json'),
         JSON.stringify({ notes:notesArray}, null, 2)
     );
     return note;
@@ -35,17 +35,17 @@ app.get('/api/notes', (req, res) => {
 
 //to homepage (index.html)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './develop/public/index.html'));
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 //to notes page
 app.get('/notes', (req, res) => { 
-    res.sendFile(path.join(__dirname, './develop/public/notes.html'));
+    res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
 //route for undefined to homepage
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './develop/public/index.html'));
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.listen(PORT, () => {
